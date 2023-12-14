@@ -1,9 +1,13 @@
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.HashMap;
 
 public class Baskin {
     // Hashmap for memoization, AKA dictionary
     private static HashMap<Integer,Integer> map = new HashMap<>();
     public static int baskin(int num) {
+
         // Check if num in map, get value from key
         if (map.containsKey(num)) {
             return map.get(num);
@@ -20,6 +24,20 @@ public class Baskin {
         return result;
     }
     public static void main(String[] args) {
-        System.out.println(baskin(5));
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage startMem = memoryMXBean.getHeapMemoryUsage();
+        long memUsedBefore = startMem.getUsed();
+
+        long startTime = System.nanoTime();
+        System.out.println(baskin(60));
+        long duration = System.nanoTime() - startTime;
+
+        MemoryUsage endMem = memoryMXBean.getHeapMemoryUsage();
+        long memUsedAfter = endMem.getUsed();
+
+        // Calculate memory used and time taken
+        long memoryUsedForItem = memUsedAfter - memUsedBefore;
+        System.out.println("Time: " + duration + " ns");
+        System.out.println("Memory: " + memoryUsedForItem + " bytes");
     }
 }
